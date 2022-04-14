@@ -1,7 +1,10 @@
 package com.example.instagram.service;
 
+import com.example.instagram.domain.user.User;
 import com.example.instagram.domain.user.UserRepository;
+import com.example.instagram.web.dto.user.UserSignupDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -17,5 +20,19 @@ public class UserService {
 
     // 선언적 트랜젝션 (메소드, 클래스, 인터페이스)
     @Transactional // 트랜잭션 기능이 포함된 프록시 객체가 생성되어 자동으로 commit 혹은 rollback을 진행해준다.
-    public boolean save()
+    public boolean save(UserSignupDto userSignupDto) {
+        if(userRepository.findUserByEmail(userSignupDto.getEmail()) != null) return false;
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        userRepository.save(User.builder()
+                        .email(userSignupDto.getEmail())
+                        .password(encoder.encode(userSignupDto.getPassword()))
+                        .phone(userSignupDto.getPhone())
+                        .name(userSignupDto.getName())
+                        .title(null)
+                        .website(null)
+                        .profileImgUrl(null)
+                .build());
+        return true;
+    }
 }
