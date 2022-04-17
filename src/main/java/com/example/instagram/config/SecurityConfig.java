@@ -16,6 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // WebSecurit
         * 스프링 시큐리티 규칙
     */
     @Override
+    protected void configure(HttpSecurity http) throws Exception { // HttpSecurity를 통해 Http 요청에 대한 보안을 설정한다.
         http.csrf().disable(); // Cross site request foreign CSRF 공격방지
         http.authorizeRequests()
                 .antMatchers("/login", "/signup", "/style/**", "/js/**", "/img/**").permitAll() // antMathers 에는 권한 없이 접근을 허가해 줄 페이지 목록들을 적어
